@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useRef } from 'react';
 import { Button, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import * as styles from './styles.js';
+import * as calculator from './calculator.js';
 
 const App = () => {
   const [activeText, setActiveText] = useState("");
@@ -24,90 +26,10 @@ const App = () => {
     setActiveText(activeText + (isClosing ? ")" : "("));
   }
 
-  function parseTree(tokens) {
-    const operations = [
-      ['+', '-'],
-      ['*', '/'],
-    ];
-    function parseNode(leftIndex, rightIndex) {
-      if (tokens[leftIndex] == '(' && tokens[rightIndex] == ')')
-        return parseNode(leftIndex + 1, rightIndex - 1);
-  
-      let openedBrackets = 0;
-      for (let w in operations) {
-        for (let i = rightIndex; i >= leftIndex; --i) {
-          if (tokens[i] == ')')
-            openedBrackets++;
-          else if (tokens[i] == '(')
-            openedBrackets--;
-          if (openedBrackets == 0 && operations[w].includes(tokens[i])) {
-            let l = parseNode(leftIndex, i - 1);
-            let r = parseNode(i + 1, rightIndex);
-            return {
-              left: l,
-              operation: tokens[i],
-              right: r
-            };
-          }
-        }
-      }
-  
-      if (leftIndex == rightIndex)
-        return parseFloat(tokens[leftIndex]);
-      return tokens.slice(leftIndex, rightIndex + 1);
-    }
-  
-    return parseNode(0, tokens.length - 1);
-  }
-  
-  function parseTokens() {
-    let isToken = function(c) {
-      return ['/', '*', '+', '-', '(', ')'].includes(c);
-    }
-  
-    let result = [];
-    let currentValue = "";
-    for (let pointer in activeText) {
-      if (currentValue && (isToken(activeText[pointer]) || isToken(currentValue))) {
-        result.push(currentValue);
-        currentValue = "";
-      }
-      currentValue += activeText[pointer];
-    }
-    if (currentValue)
-      result.push(currentValue);
-    return result;
-  }
-  
-  function calculateNode(node) {
-    if (typeof node == "number")
-      return node;
-  
-    let l = parseFloat(calculateNode(node.left));
-    let r = parseFloat(calculateNode(node.right));
-  
-    return executeOperation(node.operation, l, r);
-  }
-  
-  function executeOperation(op, l, r) {
-    switch (op) {
-      case '*':
-        return l * r;
-      case '/':
-        return l / r;
-      case '+':
-        return l + r;
-      case '-':
-        return l - r;
-      default:
-        return new Error("unknown operation: " + node.operation);
-    }
-  }
-
   function calculate() {
-    let tokens = parseTokens();
-    let tree = parseTree(tokens);
-    let result = calculateNode(tree);
+    let tokens = calculator.parseTokens(activeText);
+    let tree = calculator.parseTree(tokens);
+    let result = calculator.calculateNode(tree);
 
     setHistory(history + "\n" + activeText + "=" + result);
     setActiveText(result.toString());
@@ -130,14 +52,14 @@ const App = () => {
       <View style={{flex: 2}}>
         <View style={{backgroundColor: "#F2B591", flex: 1}}>
           <ScrollView ref={scroll}>
-            <Text style={{flex: 1, margin: 10, fontSize: 24, fontWeight: "bold", textAlign: "right", textAlignVertical: "bottom", color: "#242532", opacity: 0.5}}>{history}</Text>
+            <Text style={styles.secondaryText}>{history}</Text>
           </ScrollView>
         </View>
         <View style={{backgroundColor: "#E2A682", height: 80}}>
           <TextInput
             editable={false}
             placeholder="0"
-            style={{flex: 1, margin: 10, fontSize: 32, fontWeight: "bold", textAlign: "right", textAlignVertical: "center", color: "#242532"}}>
+            style={styles.primaryText}>
             {activeText}
           </TextInput>
         </View>
@@ -239,34 +161,5 @@ const App = () => {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    alignItems: "center",
-    flex: 1,
-    alignContent: "center",
-    justifyContent: "center",
-    backgroundColor: "#292B3C",
-  },
-  darkButton: {
-    alignItems: "center",
-    flex: 1,
-    alignContent: "center",
-    justifyContent: "center",
-    backgroundColor: "#242532",
-  },
-  uniqueButton: {
-    alignItems: "center",
-    flex: 1,
-    alignContent: "center",
-    justifyContent: "center",
-    backgroundColor: "#AD3740",
-  },
-  buttonText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-  }
-});
 
 export default App;
