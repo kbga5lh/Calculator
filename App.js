@@ -10,20 +10,61 @@ const App = () => {
 
   const scroll = useRef();
 
+  function getLastNumberPosition(text) {
+    for (let i = text.length - 1; i >= 0; --i) {
+      if (calculator.isToken(text[i]))
+        return i + 1;
+    }
+    return 0;
+  }
+
   function numberPressed(number) {
-    setActiveText(activeText + number);
+    let result = activeText;
+    result += number;
+    setActiveText(result);
   }
 
   function operationPressed(operation) {
-    setActiveText(activeText + operation);
+    let result = activeText;
+
+    if (result.length == 0 && operation != '-') { // '+' => '0+'
+      result = "0";
+    }
+
+    if (result.length > 0 && calculator.isOperation(result[result.length - 1])) { // '*+' => '*'
+      return;
+    }
+
+    if (result.length > 0 && result[result.length - 1] == '.') { // '0.' => '0'
+      result = result.substr(0, result.length - 1);
+    }
+
+    result += operation;
+    setActiveText(result);
   }
 
   function dotPressed() {
-    setActiveText(activeText + ".");
+    let result = activeText;
+    let lastNumber = activeText.substring(getLastNumberPosition(activeText), activeText.length);
+
+    if (lastNumber.length == 0) { // '.' => '0.'
+      result += '0';
+      lastNumber += '0';
+    }
+
+    if (!lastNumber.includes('.')) {
+      result += '.';
+      setActiveText(result);
+    }
   }
 
   function bracketPressed(isClosing) {
-    setActiveText(activeText + (isClosing ? ")" : "("));
+    let result = activeText;
+    if (activeText.length > 0 && activeText[activeText.length - 1] == '.') { // '0.' => '0'
+      result = activeText.substr(0, activeText.length - 1);
+    }
+    result += (isClosing ? ")" : "(");
+    setActiveText(result);
   }
 
   function calculate() {

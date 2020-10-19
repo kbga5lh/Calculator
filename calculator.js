@@ -1,4 +1,3 @@
-// this function works only with valid input
 export function parseTree(tokens) {
     const operations = [
         ['+', '-'],
@@ -32,11 +31,15 @@ export function parseTree(tokens) {
     return parseNode(0, tokens.length - 1);
 }
 
-export function parseTokens(inputText) {
-    let isToken = function(c) {
-        return ['/', '*', '+', '-', '(', ')'].includes(c);
-    }
+export function isToken(c) {
+    return ['/', '*', '+', '-', '(', ')'].includes(c);
+}
 
+export function isOperation(c) {
+    return ['/', '*', '+', '-'].includes(c);
+}
+
+export function parseTokens(inputText) {
     let result = [];
     let currentValue = "";
     for (let pointer in inputText) {
