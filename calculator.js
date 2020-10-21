@@ -39,11 +39,17 @@ export function isOperation(c) {
     return ['/', '*', '+', '-'].includes(c);
 }
 
+export function isNumeric(c) {
+    return c == '.' || (c >= '0' && c <= '9');
+}
+
 export function parseTokens(inputText) {
     let result = [];
     let currentValue = "";
     for (let pointer in inputText) {
-        if (currentValue && (isToken(inputText[pointer]) || isToken(currentValue))) {
+        if (currentValue
+            && (isToken(inputText[pointer]) || isToken(currentValue))
+            && !(currentValue == "-" && isNumeric(inputText[pointer]) && (pointer == 1 || inputText[pointer - 2] == '('))) {
             result.push(currentValue);
             currentValue = "";
         }
