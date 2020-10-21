@@ -10,6 +10,8 @@ const App = () => {
 
   const scroll = useRef();
 
+  const [openBracketsCount, setOpenBracketsCount] = useState(0);
+
   function getLastNumberPosition(text) {
     for (let i = text.length - 1; i >= 0; --i) {
       if (calculator.isToken(text[i]))
@@ -63,7 +65,21 @@ const App = () => {
     if (activeText.length > 0 && activeText[activeText.length - 1] == '.') { // '0.' => '0'
       result = activeText.substr(0, activeText.length - 1);
     }
-    result += (isClosing ? ")" : "(");
+
+    if (isClosing) {
+      if (activeText.length == 0 || openBracketsCount == 0 || calculator.isToken(result[result.length - 1])) {
+        return;
+      }
+      setOpenBracketsCount(openBracketsCount - 1);
+      result += ")";
+    } else {
+      if (activeText.length != 0 && !calculator.isOperation(result[result.length - 1])) {
+        return;
+      }
+      setOpenBracketsCount(openBracketsCount + 1);
+      result += "(";
+    }
+
     setActiveText(result);
   }
 
