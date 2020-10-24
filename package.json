@@ -6,7 +6,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "mocha"
+    "test": "jest"
   },
   "dependencies": {
     "chai": "^4.2.0",
@@ -18,8 +18,12 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.3.tar.gz",
     "react-native-web": "~0.13.12"
   },
+  "jest": {
+    "preset": "jest-expo"
+  },
   "devDependencies": {
-    "@babel/core": "~7.9.0"
+    "@babel/core": "~7.9.0",
+    "jest-expo": "^39.0.0"
   },
   "private": true
 }
