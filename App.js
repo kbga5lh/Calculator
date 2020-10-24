@@ -94,10 +94,18 @@ const App = () => {
   }
 
   function backspace() {
+    if (expression.length > 0) {
+      if (expression[expression.length - 1] == ')') {
+        setOpenBracketsCount(openBracketsCount + 1);
+      } else if (expression[expression.length - 1] == '(') {
+        setOpenBracketsCount(openBracketsCount - 1);
+      }
+    }
     setExpression(expression.substr(0, expression.length - 1));
   }
 
   function clear() {
+    setOpenBracketsCount(0);
     if (!expression)
       setHistory("");
     else
