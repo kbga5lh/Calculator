@@ -22,6 +22,11 @@ const App = () => {
 
   function numberPressed(number) {
     let result = expression;
+
+    if (result.length > 0 && result[result.length - 1] == ')') { // ')0' => ')'
+      return;
+    }
+
     result += number;
     setExpression(result);
   }
