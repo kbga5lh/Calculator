@@ -5,7 +5,7 @@ import * as styles from './styles.js';
 import * as calculator from './calculator.js';
 
 const App = () => {
-  const [activeText, setActiveText] = useState("");
+  const [expression, setExpression] = useState("");
   const [history, setHistory] = useState("");
 
   const scroll = useRef();
@@ -21,13 +21,13 @@ const App = () => {
   }
 
   function numberPressed(number) {
-    let result = activeText;
+    let result = expression;
     result += number;
-    setActiveText(result);
+    setExpression(result);
   }
 
   function operationPressed(operation) {
-    let result = activeText;
+    let result = expression;
 
     if (result.length == 0 && operation != '-') { // '+' => '0+'
       result = "0";
@@ -42,12 +42,12 @@ const App = () => {
     }
 
     result += operation;
-    setActiveText(result);
+    setExpression(result);
   }
 
   function dotPressed() {
-    let result = activeText;
-    let lastNumber = activeText.substring(getLastNumberPosition(activeText), activeText.length);
+    let result = expression;
+    let lastNumber = expression.substring(getLastNumberPosition(expression), expression.length);
 
     if (lastNumber.length == 0) { // '.' => '0.'
       result += '0';
@@ -56,52 +56,52 @@ const App = () => {
 
     if (!lastNumber.includes('.')) {
       result += '.';
-      setActiveText(result);
+      setExpression(result);
     }
   }
 
   function bracketPressed(isClosing) {
-    let result = activeText;
-    if (activeText.length > 0 && activeText[activeText.length - 1] == '.') { // '0.' => '0'
-      result = activeText.substr(0, activeText.length - 1);
+    let result = expression;
+    if (expression.length > 0 && expression[expression.length - 1] == '.') { // '0.' => '0'
+      result = expression.substr(0, expression.length - 1);
     }
 
     if (isClosing) {
-      if (activeText.length == 0 || openBracketsCount == 0 || calculator.isToken(result[result.length - 1])) {
+      if (expression.length == 0 || openBracketsCount == 0 || calculator.isToken(result[result.length - 1])) {
         return;
       }
       setOpenBracketsCount(openBracketsCount - 1);
       result += ")";
     } else {
-      if (activeText.length != 0 && !calculator.isOperation(result[result.length - 1])) {
+      if (expression.length != 0 && !calculator.isOperation(result[result.length - 1])) {
         return;
       }
       setOpenBracketsCount(openBracketsCount + 1);
       result += "(";
     }
 
-    setActiveText(result);
+    setExpression(result);
   }
 
   function calculate() {
-    let tokens = calculator.parseTokens(activeText);
+    let tokens = calculator.parseTokens(expression);
     let tree = calculator.parseTree(tokens);
     let result = calculator.calculateNode(tree);
 
-    setHistory(history + "\n" + activeText + "=" + result);
-    setActiveText(result.toString());
+    setHistory(history + "\n" + expression + "=" + result);
+    setExpression(result.toString());
     setTimeout(() => scroll.current.scrollToEnd(), 1);
   }
 
   function backspace() {
-    setActiveText(activeText.substr(0, activeText.length - 1));
+    setExpression(expression.substr(0, expression.length - 1));
   }
 
   function clear() {
-    if (!activeText)
+    if (!expression)
       setHistory("");
     else
-      setActiveText("");
+      setExpression("");
   }
 
   return (
@@ -117,7 +117,7 @@ const App = () => {
             editable={false}
             placeholder="0"
             style={styles.primaryText}>
-            {activeText}
+            {expression}
           </TextInput>
         </View>
       </View>
