@@ -46,12 +46,18 @@ const App = () => {
       result = "0";
     }
 
-    if (result.length > 0 && calculator.isOperation(result[result.length - 1])) { // '*+' => '*'
-      return;
-    }
+    if (result.length > 0) {
+      if (calculator.isOperation(result[result.length - 1])) { // '*+' => '*'
+        return;
+      }
 
-    if (result.length > 0 && result[result.length - 1] == '.') { // '0.' => '0'
-      result = result.substr(0, result.length - 1);
+      if (result[result.length - 1]  == '(') { // '(+' => '('
+        return;
+      }
+
+      if (result[result.length - 1] == '.') { // '0.' => '0'
+        result = result.substr(0, result.length - 1);
+      }
     }
 
     result += operation;
@@ -97,12 +103,35 @@ const App = () => {
   }
 
   function calculate() {
-    let tokens = calculator.parseTokens(expression);
+    let correctedExpression = expression;
+
+    if (expression.length > 0) {
+      let correctedOpenBracketsCount = openBracketsCount;
+      if (correctedExpression[correctedExpression.length - 1] == '(') { // 'expr(' => 'expr'
+        correctedExpression = correctedExpression.substring(0, correctedExpression.length - 1);
+        correctedOpenBracketsCount -= 1;
+      }
+      if (calculator.isOperation(correctedExpression[correctedExpression.length - 1])) { // 'expr+' => 'expr'
+        correctedExpression = correctedExpression.substring(0, correctedExpression.length - 1);
+      }
+      if (correctedOpenBracketsCount > 0) { // '(0' => '(0)'
+        for (let i = 0; i < correctedOpenBracketsCount; ++i) {
+          correctedExpression += ')';
+        }
+        correctedOpenBracketsCount = 0;
+      }
+    }
+    if (correctedExpression.length == 0) {
+      correctedExpression = "0";
+    }
+
     clearState();
+
+    let tokens = calculator.parseTokens(correctedExpression);
     let tree = calculator.parseTree(tokens);
     let result = calculator.calculateNode(tree).toString();
 
-    setHistory(history + "\n" + expression + "=" + result);
+    setHistory(history + "\n" + correctedExpression + "=" + result);
     if (result.includes("Infinity") || result.includes("NaN")) {
       result = "";
     }
