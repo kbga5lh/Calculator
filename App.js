@@ -98,6 +98,7 @@ const App = () => {
 
   function calculate() {
     let tokens = calculator.parseTokens(expression);
+    clearState();
     let tree = calculator.parseTree(tokens);
     let result = calculator.calculateNode(tree);
 
@@ -117,8 +118,12 @@ const App = () => {
     setExpression(expression.substr(0, expression.length - 1));
   }
 
-  function clear() {
+  function clearState() {
     setOpenBracketsCount(0);
+  }
+
+  function clear() {
+    clearState();
     if (!expression)
       setHistory("");
     else
