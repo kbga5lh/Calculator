@@ -100,9 +100,12 @@ const App = () => {
     let tokens = calculator.parseTokens(expression);
     clearState();
     let tree = calculator.parseTree(tokens);
-    let result = calculator.calculateNode(tree);
+    let result = calculator.calculateNode(tree).toString();
 
     setHistory(history + "\n" + expression + "=" + result);
+    if (result.includes("Infinity") || result.includes("NaN")) {
+      result = "";
+    }
     setExpression(result.toString());
     setTimeout(() => scroll.current.scrollToEnd(), 1);
   }
