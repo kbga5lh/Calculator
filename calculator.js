@@ -5,7 +5,15 @@ export function parseTree(tokens) {
     ];
 
     function parseNode(leftIndex, rightIndex) {
-        if (tokens[leftIndex] == '(' && tokens[rightIndex] == ')')
+        let lb = 0;
+        let rb = 0;
+        for (let i = rightIndex; i >= leftIndex; --i) {
+            if (tokens[i] == '(')
+                lb++;
+            else if (tokens[i] == ')')
+            rb++;
+        }
+        if (lb == 1 && rb == 1 && tokens[leftIndex] == '(' && tokens[rightIndex] == ')')
             return parseNode(leftIndex + 1, rightIndex - 1);
 
         let openedBrackets = 0;
