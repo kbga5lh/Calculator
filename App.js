@@ -27,6 +27,14 @@ const App = () => {
       return;
     }
 
+    let lastNumber = expression.substring(getLastNumberPosition(expression), expression.length);
+
+    if (lastNumber.length == 1) { // '01' => '1'
+      if (lastNumber[0] == '0') {
+        result = result.substring(0, result.length - 1);
+      }
+    }
+
     result += number;
     setExpression(result);
   }
