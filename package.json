@@ -9,7 +9,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "chai": "^4.2.0",
     "expo": "~39.0.2",
     "expo-status-bar": "~1.0.2",
     "jest": "^26.5.3",
