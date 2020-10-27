@@ -163,7 +163,7 @@ const App = () => {
   }
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, backgroundColor: "#F2B591"}}>
       <View style={{flex: 2}}>
         <View style={{backgroundColor: "#F2B591", flex: 1}}>
           <ScrollView ref={scroll} contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}>
