@@ -8,7 +8,8 @@ const App = () => {
   const [expression, setExpression] = useState("");
   const [history, setHistory] = useState("");
 
-  const scroll = useRef();
+  const scrollHistory = useRef();
+  const scrollExpression = useRef();
 
   const [openBracketsCount, setOpenBracketsCount] = useState(0);
 
@@ -37,6 +38,7 @@ const App = () => {
 
     result += number;
     setExpression(result);
+    setTimeout(() => scrollExpression.current.scrollToEnd(), 1);
   }
 
   function operationPressed(operation) {
@@ -62,6 +64,7 @@ const App = () => {
 
     result += operation;
     setExpression(result);
+    setTimeout(() => scrollExpression.current.scrollToEnd(), 1);
   }
 
   function dotPressed() {
@@ -77,6 +80,7 @@ const App = () => {
       result += '.';
       setExpression(result);
     }
+    setTimeout(() => scrollExpression.current.scrollToEnd(), 1);
   }
 
   function bracketPressed(isClosing) {
@@ -100,6 +104,7 @@ const App = () => {
     }
 
     setExpression(result);
+    setTimeout(() => scrollExpression.current.scrollToEnd(), 1);
   }
 
   function calculate() {
@@ -136,7 +141,8 @@ const App = () => {
       result = "";
     }
     setExpression(result.toString());
-    setTimeout(() => scroll.current.scrollToEnd(), 1);
+    setTimeout(() => scrollHistory.current.scrollToEnd(), 1);
+    setTimeout(() => scrollExpression.current.scrollToEnd(), 1);
   }
 
   function backspace() {
@@ -148,6 +154,7 @@ const App = () => {
       }
     }
     setExpression(expression.substr(0, expression.length - 1));
+    setTimeout(() => scrollExpression.current.scrollToEnd(), 1);
   }
 
   function clearState() {
@@ -163,20 +170,17 @@ const App = () => {
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: "#F2B591"}}>
-      <View style={{flex: 2}}>
-        <View style={{backgroundColor: "#F2B591", flex: 1}}>
-          <ScrollView ref={scroll} contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}>
+    <View style={{flex: 1}}>
+      <View style={{flex: 2, backgroundColor: "#F2B591"}}>
+        <View style={{backgroundColor: "#F2B591", flex: 1, paddingTop: 30}}>
+          <ScrollView ref={scrollHistory} contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}>
             <Text style={styles.secondaryText}>{history}</Text>
           </ScrollView>
         </View>
         <View style={{backgroundColor: "#E2A682", height: 80}}>
-          <TextInput
-            editable={false}
-            placeholder="0"
-            style={styles.primaryText}>
-            {expression}
-          </TextInput>
+          <ScrollView horizontal={true} ref={scrollExpression} contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}>
+            <Text style={styles.primaryText}>{expression}</Text>
+          </ScrollView>
         </View>
       </View>
       <View style={{flex: 3}}>
