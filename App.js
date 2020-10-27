@@ -86,13 +86,13 @@ const App = () => {
     }
 
     if (isClosing) {
-      if (expression.length == 0 || openBracketsCount == 0 || calculator.isToken(result[result.length - 1])) {
+      if (expression.length == 0 || openBracketsCount == 0 || (calculator.isToken(result[result.length - 1]) && result[result.length - 1] != ')')) {
         return;
       }
       setOpenBracketsCount(openBracketsCount - 1);
       result += ")";
     } else {
-      if (expression.length != 0 && !calculator.isOperation(result[result.length - 1])) {
+      if (expression.length != 0 && !calculator.isOperation(result[result.length - 1]) && result[result.length - 1] != '(') {
         return;
       }
       setOpenBracketsCount(openBracketsCount + 1);
