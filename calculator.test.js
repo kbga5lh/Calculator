@@ -16,4 +16,5 @@ describe('Calculator', () => {
   it('-2-2*(-2)=2', () => expect(calculate("-2-2*(-2)")).toBe(2));
   it('(2+6.5)*2+(4/2)=19', () => expect(calculate("(2+6.5)*2+(4/2)")).toBe(19));
   it('(2+6.5)*2+(4/2)+2=21', () => expect(calculate("(2+6.5)*2+(4/2)+2")).toBe(21));
+  it('((3-2)+(3-2))=2', () => expect(calculate("((3-2)+(3-2))")).toBe(2));
 });

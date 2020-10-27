@@ -5,16 +5,20 @@ export function parseTree(tokens) {
     ];
 
     function parseNode(leftIndex, rightIndex) {
-        let lb = 0;
-        let rb = 0;
-        for (let i = rightIndex; i >= leftIndex; --i) {
-            if (tokens[i] == '(')
-                lb++;
-            else if (tokens[i] == ')')
-            rb++;
+        if (tokens[leftIndex] == '(' && tokens[rightIndex] == ')') {
+            let b = 0;
+            let x = false;
+            for (let i = rightIndex - 1; i >= leftIndex + 1; --i) {
+                if (tokens[i] == '(')
+                    b--;
+                else if (tokens[i] == ')')
+                    b++;
+                if (b < 0)
+                    x = true;
+            }
+            if (!x)
+                return parseNode(leftIndex + 1, rightIndex - 1);
         }
-        if (lb == 1 && rb == 1 && tokens[leftIndex] == '(' && tokens[rightIndex] == ')')
-            return parseNode(leftIndex + 1, rightIndex - 1);
 
         let openedBrackets = 0;
         for (let w in operations) {
