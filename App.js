@@ -51,7 +51,7 @@ const App = () => {
         return;
       }
 
-      if (result[result.length - 1]  == '(') { // '(+' => '('
+      if (result[result.length - 1]  == '(' && operation != '-') { // '(+' => '('
         return;
       }
 
