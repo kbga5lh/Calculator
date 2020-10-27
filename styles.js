@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 	{
 		flex: 1,
 		margin: 10,
-		fontSize: 24,
+		fontSize: 18,
 		fontWeight: "bold",
 		textAlign: "right",
 		textAlignVertical: "bottom",
