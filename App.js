@@ -24,9 +24,8 @@ const App = () => {
   function numberPressed(number) {
     let result = expression;
 
-    if (result.length > 0 && result[result.length - 1] == ')') { // ')0' => ')'
+    if (result.length > 0 && result[result.length - 1] == ')') // ')0' => ')'
       return;
-    }
 
     let lastNumber = expression.substring(getLastNumberPosition(expression), expression.length);
 
@@ -44,22 +43,18 @@ const App = () => {
   function operationPressed(operation) {
     let result = expression;
 
-    if (result.length == 0 && operation != '-') { // '+' => '0+'
+    if (result.length == 0 && operation != '-') // '+' => '0+'
       result = "0";
-    }
 
     if (result.length > 0) {
-      if (calculator.isOperation(result[result.length - 1])) { // '*+' => '*'
+      if (calculator.isOperation(result[result.length - 1])) // '*+' => '*'
         return;
-      }
 
-      if (result[result.length - 1]  == '(' && operation != '-') { // '(+' => '('
+      if (result[result.length - 1]  == '(' && operation != '-') // '(+' => '('
         return;
-      }
 
-      if (result[result.length - 1] == '.') { // '0.' => '0'
+      if (result[result.length - 1] == '.') // '0.' => '0'
         result = result.substr(0, result.length - 1);
-      }
     }
 
     result += operation;
@@ -76,18 +71,18 @@ const App = () => {
       lastNumber += '0';
     }
 
-    if (!lastNumber.includes('.')) {
-      result += '.';
-      setExpression(result);
-    }
+    if (lastNumber.includes('.'))
+      return;
+
+    result += '.';
+    setExpression(result);
     setTimeout(() => scrollExpression.current.scrollToEnd(), 1);
   }
 
   function bracketPressed(isClosing) {
     let result = expression;
-    if (expression.length > 0 && expression[expression.length - 1] == '.') { // '0.' => '0'
+    if (expression.length > 0 && expression[expression.length - 1] == '.') // '0.' => '0'
       result = expression.substr(0, expression.length - 1);
-    }
 
     if (isClosing) {
       if (expression.length == 0 || openBracketsCount == 0 || (calculator.isToken(result[result.length - 1]) && result[result.length - 1] != ')')) {
