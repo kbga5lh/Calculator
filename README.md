@@ -2,12 +2,8 @@
 
 ![App](./ReadmeImages/Calculator.jpg)
 
-This is my first app using React Native framework.
-
-## How it works
-
 ### Front-end
-Everything here is in adaptive layout, all text is in the ScrollViews.
+Everything is in adaptive layout, all text is in the ScrollViews.
 
 All input is processed and corrected, if needed.
 
